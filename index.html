@@ -9,149 +9,159 @@
         @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
         .gta-font { font-family: 'Space Mono', monospace; }
         body { background-color: #0a0a0a; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
     </style>
 </head>
 <body class="text-white font-sans pb-20">
 
-    <header class="bg-black p-6 border-b-4 border-green-600 shadow-2xl flex justify-between items-center">
+    <header class="bg-black p-4 border-b-4 border-green-600 shadow-2xl flex justify-between items-center sticky top-0 z-50">
         <div>
-            <h1 class="text-3xl font-black tracking-tighter uppercase gta-font italic">GTA <span class="text-green-500">Empire</span></h1>
-            <p class="text-xs text-gray-500 tracking-widest uppercase">Solo Operative Dashboard v1.3</p>
+            <h1 class="text-2xl font-black tracking-tighter uppercase gta-font italic leading-none text-white">GTA <span class="text-green-500">Empire</span></h1>
+            <p class="text-[10px] text-gray-500 tracking-widest uppercase mt-1">Solo Operative System v1.4</p>
         </div>
-        <div class="text-right hidden sm:block">
-            <p class="text-gray-400 text-xs uppercase">Location</p>
-            <p class="text-white font-bold uppercase">Los Santos / Blaine County</p>
+        <div class="text-right">
+            <span id="header-money" class="text-green-400 gta-font font-bold">0 $</span>
         </div>
     </header>
 
+    <nav class="bg-zinc-900 border-b border-zinc-800 sticky top-[68px] z-40">
+        <div class="flex justify-around max-w-6xl mx-auto text-[10px] uppercase font-bold tracking-widest">
+            <button onclick="showTab('dashboard')" class="nav-btn py-4 px-2 border-b-2 border-green-500 text-green-500 flex-1">Dashboard</button>
+            <button onclick="showTab('wiki')" class="nav-btn py-4 px-2 border-b-2 border-transparent text-zinc-500 flex-1">Wiki</button>
+            <button onclick="showTab('maps')" class="nav-btn py-4 px-2 border-b-2 border-transparent text-zinc-500 flex-1">Karten</button>
+            <button onclick="showTab('system')" class="nav-btn py-4 px-2 border-b-2 border-transparent text-zinc-500 flex-1">Sync</button>
+        </div>
+    </nav>
+
     <main class="p-4 md:p-8 max-w-6xl mx-auto">
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            
-            <div onclick="updateMoney()" class="bg-zinc-900 p-6 rounded border border-zinc-800 hover:border-green-500 cursor-pointer transition shadow-lg">
-                <h2 class="text-zinc-500 text-xs uppercase font-bold mb-1 tracking-widest">Bankguthaben</h2>
-                <div class="flex justify-between items-end">
-                    <span id="display-money" class="text-4xl font-bold text-green-400 gta-font">0 $</span>
-                    <span id="money-needed" class="text-xs text-red-500 mb-1 italic">Ziel-Berechnung...</span>
-                </div>
-                <p class="text-[10px] text-zinc-600 mt-2 italic text-right uppercase italic">Klicken zum Aktualisieren</p>
-            </div>
-
-            <div class="bg-zinc-900 p-6 rounded border border-zinc-800 shadow-lg relative overflow-hidden">
-                <div class="absolute top-0 right-0 bg-yellow-600 text-black text-[10px] px-2 font-bold uppercase">Täglicher Reset aktiv</div>
-                <h2 class="text-yellow-500 text-xs uppercase font-bold mb-3 tracking-widest">Daily Solo Routine</h2>
-                <div class="grid grid-cols-2 gap-3 text-sm">
-                    <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="checkbox" class="daily-checkbox w-4 h-4 accent-yellow-500" onclick="saveDailies()"> 
-                        <span class="group-hover:text-yellow-400 transition">Casino Glücksrad</span>
-                    </label>
-                    <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="checkbox" class="daily-checkbox w-4 h-4 accent-yellow-500" onclick="saveDailies()"> 
-                        <span class="group-hover:text-yellow-400 transition">Acid Boost (Tisch)</span>
-                    </label>
-                    <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="checkbox" class="daily-checkbox w-4 h-4 accent-yellow-500" onclick="saveDailies()"> 
-                        <span class="group-hover:text-yellow-400 transition">Händler besuchen</span>
-                    </label>
-                    <label class="flex items-center space-x-2 cursor-pointer group">
-                        <input type="checkbox" class="daily-checkbox w-4 h-4 accent-yellow-500" onclick="saveDailies()"> 
-                        <span class="group-hover:text-yellow-400 transition">Safe leeren</span>
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <div class="bg-zinc-900 p-6 rounded border border-zinc-800 border-t-4 border-t-yellow-600 shadow-lg">
-                <h3 class="font-bold mb-1 text-yellow-500 uppercase text-sm tracking-widest">Dax Missionen</h3>
-                <p class="text-[10px] text-zinc-500 mb-4 uppercase">10 für Acid Lab Equipment-Upgrade</p>
-                <div class="grid grid-cols-5 gap-2">
-                    <div id="dax-1" onclick="toggleCircle(this)" class="dax-circle h-10 w-full rounded border-2 border-zinc-700 flex items-center justify-center cursor-pointer font-bold text-zinc-500 hover:border-yellow-500 transition">1</div>
-                    <div id="dax-2" onclick="toggleCircle(this)" class="dax-circle h-10 w-full rounded border-2 border-zinc-700 flex items-center justify-center cursor-pointer font-bold text-zinc-500 hover:border-yellow-500 transition">2</div>
-                    <div id="dax-3" onclick="toggleCircle(this)" class="dax-circle h-10 w-full rounded border-2 border-zinc-700 flex items-center justify-center cursor-pointer font-bold text-zinc-500 hover:border-yellow-500 transition">3</div>
-                    <div id="dax-4" onclick="toggleCircle(this)" class="dax-circle h-10 w-full rounded border-2 border-zinc-700 flex items-center justify-center cursor-pointer font-bold text-zinc-500 hover:border-yellow-500 transition">4</div>
-                    <div id="dax-5" onclick="toggleCircle(this)" class="dax-circle h-10 w-full rounded border-2 border-zinc-700 flex items-center justify-center cursor-pointer font-bold text-zinc-500 hover:border-yellow-500 transition">5</div>
-                    <div id="dax-6" onclick="toggleCircle(this)" class="dax-circle h-10 w-full rounded border-2 border-zinc-700 flex items-center justify-center cursor-pointer font-bold text-zinc-500 hover:border-yellow-500 transition">6</div>
-                    <div id="dax-7" onclick="toggleCircle(this)" class="dax-circle h-10 w-full rounded border-2 border-zinc-700 flex items-center justify-center cursor-pointer font-bold text-zinc-500 hover:border-yellow-500 transition">7</div>
-                    <div id="dax-8" onclick="toggleCircle(this)" class="dax-circle h-10 w-full rounded border-2 border-zinc-700 flex items-center justify-center cursor-pointer font-bold text-zinc-500 hover:border-yellow-500 transition">8</div>
-                    <div id="dax-9" onclick="toggleCircle(this)" class="dax-circle h-10 w-full rounded border-2 border-zinc-700 flex items-center justify-center cursor-pointer font-bold text-zinc-500 hover:border-yellow-500 transition">9</div>
-                    <div id="dax-10" onclick="toggleCircle(this)" class="dax-circle h-10 w-full rounded border-2 border-zinc-700 flex items-center justify-center cursor-pointer font-bold text-zinc-500 hover:border-yellow-500 transition">10</div>
-                </div>
-            </div>
-
-            <div class="bg-purple-900/10 p-6 rounded border border-purple-900/30 border-t-4 border-t-purple-600 md:col-span-2 shadow-lg">
-                <h3 class="font-bold mb-4 text-purple-400 uppercase tracking-widest text-sm">🧪 Solo-Wiki: Acid Lab (Brickade 6x6)</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                    <div class="bg-black/40 p-3 rounded">
-                        <p class="font-bold text-purple-300 mb-2 uppercase underline">Wirtschaft:</p>
-                        <ul class="space-y-1 text-zinc-400">
-                            <li>Volles Lager: <span class="text-white">~237.000 $</span></li>
-                            <li>Mit Upgrade: <span class="text-green-400 font-bold">~335.000 $</span></li>
-                            <li>Prod.-Zeit: <span class="text-white">4 Std. (2 Std. mit Boost)</span></li>
-                        </ul>
+        <div id="dashboard" class="tab-content active">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div onclick="updateMoney()" class="bg-zinc-900 p-6 rounded border border-zinc-800 hover:border-green-500 cursor-pointer transition shadow-lg">
+                    <h2 class="text-zinc-500 text-xs uppercase font-bold mb-1">Bankguthaben (Klick)</h2>
+                    <div class="flex justify-between items-end">
+                        <span id="display-money" class="text-4xl font-bold text-green-400 gta-font">0 $</span>
+                        <span id="money-needed" class="text-xs text-red-500 mb-1 italic uppercase tracking-tighter">Lade...</span>
                     </div>
-                    <div class="bg-black/40 p-3 rounded">
-                        <p class="font-bold text-purple-300 mb-2 uppercase underline">Solo-Strategie:</p>
-                        <ul class="space-y-1 text-zinc-400">
-                            <li>• Ruf Dax an für "Fooligan Jobs" (48m Cooldown)</li>
-                            <li>• Vorräte kaufen spart Zeit für Heists</li>
-                            <li>• Verkauf in vollen Lobbies gibt bis zu 50% Bonus</li>
-                        </ul>
+                </div>
+
+                <div class="bg-zinc-900 p-6 rounded border border-zinc-800 shadow-lg">
+                    <h2 class="text-yellow-500 text-xs uppercase font-bold mb-3 tracking-widest">Daily Solo Routine</h2>
+                    <div class="grid grid-cols-2 gap-3 text-[11px]">
+                        <label class="flex items-center space-x-2"><input type="checkbox" class="daily-checkbox accent-yellow-500" onclick="saveDailies()"> <span>Casino Rad</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" class="daily-checkbox accent-yellow-500" onclick="saveDailies()"> <span>Acid Boost</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" class="daily-checkbox accent-yellow-500" onclick="saveDailies()"> <span class="text-blue-300 underline">Stash House</span></label>
+                        <label class="flex items-center space-x-2"><input type="checkbox" class="daily-checkbox accent-yellow-500" onclick="saveDailies()"> <span class="text-blue-300 underline">G's Cache</span></label>
                     </div>
                 </div>
             </div>
 
+            <div class="bg-zinc-900 p-6 rounded border border-zinc-800 border-t-4 border-t-yellow-600">
+                <h3 class="font-bold mb-1 text-yellow-500 uppercase text-sm">Dax Missionen (Upgrade Fortschritt)</h3>
+                <div class="grid grid-cols-5 sm:grid-cols-10 gap-2 mt-4" id="dax-container">
+                    </div>
+            </div>
         </div>
+
+        <div id="system" class="tab-content">
+            <div class="bg-zinc-900 p-6 rounded border border-zinc-800 shadow-lg">
+                <h3 class="font-bold mb-4 text-green-500 uppercase">Daten-Transfer (Sync)</h3>
+                <p class="text-xs text-zinc-400 mb-4">Kopiere diesen Code vom Laptop und füge ihn auf dem Tablet ein, um deinen Stand zu übertragen.</p>
+                
+                <textarea id="sync-code" class="w-full bg-black text-green-500 p-3 font-mono text-[10px] rounded border border-zinc-700 h-32 mb-4" readonly></textarea>
+                
+                <div class="flex space-x-4">
+                    <button onclick="generateSyncCode()" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold py-3 px-4 rounded flex-1">CODE GENERIEREN</button>
+                    <button onclick="importSyncCode()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-3 px-4 rounded flex-1">CODE IMPORTIEREN</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="wiki" class="tab-content">
+            <div class="bg-purple-900/10 p-6 rounded border border-purple-900/30 border-t-4 border-t-purple-600">
+                <h3 class="font-bold mb-4 text-purple-400 uppercase tracking-widest text-sm">🧪 Acid Lab Expertise</h3>
+                <p class="text-xs text-zinc-400 leading-relaxed">Das Acid Lab ist dein passives Einkommen. Sobald Vorräte da sind, produziert es im Hintergrund, während du Missionen machst.</p>
+            </div>
+        </div>
+
+        <div id="maps" class="tab-content">
+            <div class="bg-zinc-900 p-6 rounded border border-zinc-800 border-t-4 border-t-blue-600 shadow-lg text-center">
+                <h3 class="font-bold mb-4 text-blue-400 uppercase tracking-widest text-sm">🗺️ Lagezentrum</h3>
+                <div class="grid grid-cols-1 gap-4">
+                    <a href="https://gtaweb.eu/gtao-map/ls/0" target="_blank" class="bg-zinc-800 border border-blue-500 text-white text-xs font-bold py-4 rounded">Interaktive GTA Map</a>
+                    <a href="https://vandal.com.br/gta-online-gun-van-location/" target="_blank" class="bg-zinc-800 border border-red-500 text-white text-xs font-bold py-4 rounded italic">Wo ist der Gun Van heute?</a>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <script>
+        // --- INITIALISIERUNG ---
         window.onload = function() {
+            createDaxCircles();
             checkDailyReset(); 
             loadProgress();    
             updateMoneyDisplay();
         };
 
-        // --- DAILY LOGIC ---
-        function checkDailyReset() {
-            const today = new Date().toDateString();
-            const lastReset = localStorage.getItem('gta_last_reset');
-
-            if (lastReset !== today) {
-                resetDailies();
-                localStorage.setItem('gta_last_reset', today);
-            } else {
-                loadDailies();
+        function createDaxCircles() {
+            const container = document.getElementById('dax-container');
+            for(let i=1; i<=10; i++) {
+                let div = document.createElement('div');
+                div.id = `dax-${i}`;
+                div.className = "dax-circle h-10 rounded border-2 border-zinc-700 flex items-center justify-center cursor-pointer font-bold text-zinc-500 transition";
+                div.innerText = i;
+                div.onclick = function() { toggleCircle(this); };
+                container.appendChild(div);
             }
         }
 
-        function resetDailies() {
-            document.querySelectorAll('.daily-checkbox').forEach(cb => cb.checked = false);
-            saveDailies();
-        }
-
-        function saveDailies() {
-            let dailyStatus = {};
-            document.querySelectorAll('.daily-checkbox').forEach((cb, index) => {
-                dailyStatus['daily-' + index] = cb.checked;
+        // --- NAVIGATION ---
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('border-green-500', 'text-green-500');
+                btn.classList.add('border-transparent', 'text-zinc-500');
             });
-            localStorage.setItem('gta_daily_progress', JSON.stringify(dailyStatus));
+            event.currentTarget.classList.replace('border-transparent', 'text-zinc-500');
+            event.currentTarget.classList.add('border-green-500', 'text-green-500');
+            if(tabId === 'system') generateSyncCode();
         }
 
-        function loadDailies() {
-            let saved = localStorage.getItem('gta_daily_progress');
-            if (saved) {
-                let dailyStatus = JSON.parse(saved);
-                document.querySelectorAll('.daily-checkbox').forEach((cb, index) => {
-                    cb.checked = dailyStatus['daily-' + index] || false;
-                });
+        // --- SYNC LOGIC ---
+        function generateSyncCode() {
+            const data = {
+                money: localStorage.getItem('gta_money'),
+                dax: localStorage.getItem('gta_dax_progress'),
+                dailies: localStorage.getItem('gta_daily_progress'),
+                lastReset: localStorage.getItem('gta_last_reset')
+            };
+            document.getElementById('sync-code').value = btoa(JSON.stringify(data)); // btoa verschlüsselt es leicht in Text
+        }
+
+        function importSyncCode() {
+            const code = prompt("Füge den Sync-Code hier ein:");
+            if (code) {
+                try {
+                    const data = JSON.parse(atob(code));
+                    localStorage.setItem('gta_money', data.money);
+                    localStorage.setItem('gta_dax_progress', data.dax);
+                    localStorage.setItem('gta_daily_progress', data.dailies);
+                    localStorage.setItem('gta_last_reset', data.lastReset);
+                    location.reload(); // Seite neu laden um Daten anzuzeigen
+                } catch(e) {
+                    alert("Ungültiger Code!");
+                }
             }
         }
 
-        // --- MONEY LOGIC ---
+        // --- REST DER LOGIK (Money, Dax, Dailies wie vorher) ---
         function updateMoney() {
             let currentMoney = localStorage.getItem('gta_money') || 0;
-            let newMoney = prompt("Aktueller Kontostand in Los Santos:", currentMoney);
+            let newMoney = prompt("Kontostand:", currentMoney);
             if (newMoney !== null) {
                 localStorage.setItem('gta_money', newMoney.replace(/[^0-9]/g, ''));
                 updateMoneyDisplay();
@@ -161,45 +171,58 @@
         function updateMoneyDisplay() {
             let money = parseInt(localStorage.getItem('gta_money')) || 0;
             document.getElementById('display-money').innerText = money.toLocaleString() + " $";
-            
+            document.getElementById('header-money').innerText = money.toLocaleString() + " $";
             let goal = 2200000;
             let needed = goal - money;
             let neededElement = document.getElementById('money-needed');
-            
             if (needed > 0) {
                 neededElement.innerText = "Noch " + needed.toLocaleString() + " $ bis Kosatka";
-                neededElement.className = "text-[10px] text-red-500 mb-1 italic uppercase";
+                neededElement.className = "text-[10px] text-red-500 italic uppercase";
             } else {
                 neededElement.innerText = "KOSATKA BEREIT!";
-                neededElement.className = "text-[10px] text-green-500 mb-1 font-bold uppercase";
+                neededElement.className = "text-[10px] text-green-500 font-bold uppercase";
             }
         }
 
-        // --- DAX LOGIC ---
-        function toggleCircle(element) {
-            element.classList.toggle('bg-yellow-600');
-            element.classList.toggle('text-black');
-            element.classList.toggle('border-yellow-600');
+        function checkDailyReset() {
+            const today = new Date().toDateString();
+            if (localStorage.getItem('gta_last_reset') !== today) {
+                document.querySelectorAll('.daily-checkbox').forEach(cb => cb.checked = false);
+                saveDailies();
+                localStorage.setItem('gta_last_reset', today);
+            } else { loadDailies(); }
+        }
+
+        function saveDailies() {
+            let status = {};
+            document.querySelectorAll('.daily-checkbox').forEach((cb, i) => status[i] = cb.checked);
+            localStorage.setItem('gta_daily_progress', JSON.stringify(status));
+        }
+
+        function loadDailies() {
+            let saved = JSON.parse(localStorage.getItem('gta_daily_progress'));
+            if (saved) document.querySelectorAll('.daily-checkbox').forEach((cb, i) => cb.checked = saved[i] || false);
+        }
+
+        function toggleCircle(el) {
+            el.classList.toggle('bg-yellow-600');
+            el.classList.toggle('text-black');
+            el.classList.toggle('border-yellow-600');
             saveProgress();
         }
 
         function saveProgress() {
-            let daxStatus = {};
-            document.querySelectorAll('.dax-circle').forEach(circle => {
-                daxStatus[circle.id] = circle.classList.contains('bg-yellow-600');
-            });
-            localStorage.setItem('gta_dax_progress', JSON.stringify(daxStatus));
+            let status = {};
+            document.querySelectorAll('.dax-circle').forEach(c => status[c.id] = c.classList.contains('bg-yellow-600'));
+            localStorage.setItem('gta_dax_progress', JSON.stringify(status));
         }
 
         function loadProgress() {
-            let savedData = localStorage.getItem('gta_dax_progress');
-            if (savedData) {
-                let daxStatus = JSON.parse(savedData);
-                for (let id in daxStatus) {
-                    let element = document.getElementById(id);
-                    if (element && daxStatus[id]) {
-                        element.classList.add('bg-yellow-600', 'text-black', 'border-yellow-600');
-                    }
+            let saved = JSON.parse(localStorage.getItem('gta_dax_progress'));
+            if (saved) {
+                for (let id in saved) {
+                    let el = document.getElementById(id);
+                    if (el && saved[id]) el.classList.add('bg-yellow-600', 'text-black', 'border-yellow-600');
                 }
             }
         }
